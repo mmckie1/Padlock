@@ -129,7 +129,10 @@
                 const validWords = await loadValidWords('valid_words.txt'); // Ensure this file is accessible
     
                 const { bestWord, maxCount } = await findBestThirdWord(bella, loves, validWords);
-                console.log(`The best third word is '${bestWord}' which allows ${maxCount} valid words.`);
+                // Display the output
+                const outputDiv = document.getElementById('output');
+                outputDiv.innerHTML = `The best third word is <strong>${bestWord}</strong>, allowing the lock to spell <strong>${maxCount}</strong> valid words!`;
+                //console.log(`The best third word is '${bestWord}' which allows ${maxCount} valid words.`);
             }
     
             main();
