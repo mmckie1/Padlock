@@ -63,7 +63,7 @@
         <div class="container">
         <h1>Farmer John's Lock Puzzle</h1>
             <p>Help Farmer John find the best word to add to his lock!</p>
-            <button onclick="window.main()">Find Best Word</button>
+            <button onclick="main()">Find Best Word</button>
             <div id="output"></div>
             <p class="credits">Background image courtesy of Pixabay</p>
         </div>
@@ -123,7 +123,7 @@
             return { bestWord, maxCount };
         }
 
-        window.main = async function()) {
+        window.main = async function() {
             const bella = "BELLA";
             const loves = "LOVES";
             const validWords = await loadValidWords('valid_words.txt'); // Ensure this file is accessible
