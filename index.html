@@ -160,9 +160,13 @@
 
             const { bestWord, maxCount } = await findBestThirdWord(bella, loves, validWords);
 
+            /// Update the padlock
+            const thirdRow = document.getElementById('third-row');
+            thirdRow.textContent = bestWord;
+
             // Display the output
             const outputDiv = document.getElementById('output');
-            outputDiv.innerHTML = `The best third word is <strong>${bestWord}</strong>, allowing the lock to spell <strong>${maxCount}</strong> valid words!`;
+            outputDiv.innerHTML = `This word would allow the lock to spell <strong>${maxCount}</strong> valid words!`;
         }
         </script>
 </body>
