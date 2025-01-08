@@ -72,6 +72,18 @@
             padding: 20px;
             max-width: 200px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .padlock-top {
+            width: 120px;
+            height: 60px;
+            background: linear-gradient(to bottom, #d4d4d4, #aaa);
+            border-radius: 60px 60px 0 0;
+            border: 3px solid #40916c;
+            position: absolute;
+            top: -70px;
+            z-index: -1;
         }
 
         .padlock-row {
@@ -82,6 +94,7 @@
             padding: 5px 10px;
             width: 100%;
             text-align: center;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
         }
     </style>
     <body>
