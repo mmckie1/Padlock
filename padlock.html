@@ -63,7 +63,7 @@
         async function main() {
             const bella = "BELLA";
             const loves = "LOVES";
-            const validWords = await loadValidWords('https://drive.google.com/file/d/12xCbEv2wphUedaSqJC1C6CDZt2oQ1Aaz/view?usp=sharing'); // Ensure this file is accessible
+            const validWords = await loadValidWords('valid_words.txt'); // Ensure this file is accessible
 
             const { bestWord, maxCount } = await findBestThirdWord(bella, loves, validWords);
             console.log(`The best third word is '${bestWord}' which allows ${maxCount} valid words.`);
