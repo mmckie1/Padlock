@@ -61,7 +61,7 @@ function findBestThirdWord(bella, loves, validWords) {
 // Main execution
 const bella = "BELLA";
 const loves = "LOVES";
-const validWords = loadValidWords('/Projects/valid_words.txt'); // Path to valid_words.txt file
+const validWords = loadValidWords('valid_words.txt'); // Path to valid_words.txt file
 
 const { bestWord, maxCount } = findBestThirdWord(bella, loves, validWords);
 
