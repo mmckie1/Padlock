@@ -59,72 +59,80 @@
             color: #555;
         }
     </style>
-    <script type="module">
-        async function loadValidWords(filePath) {
-            const response = await fetch(filePath);
-            const data = await response.text();
-            return new Set(data.split('\n').map(word => word.trim().toUpperCase()));
-        }
-
-        function getDiscLetters(word1, word2, word3) {
-            const discs = [];
-            for (let i = 0; i < 5; i++) {
-                discs.push(new Set([word1[i], word2[i], word3[i]]));
+    <body>
+        <div class="container">
+        <h1>Farmer John's Lock Puzzle</h1>
+            <p>Help Farmer John find the best word to add to his lock!</p>
+            <button onclick="findBestWord()">Find Best Word</button>
+            <div id="output"></div>
+            <p class="credits">Background image courtesy of Pixabay</p>
+        </div>
+        <script type="module">
+            async function loadValidWords(filePath) {
+                const response = await fetch(filePath);
+                const data = await response.text();
+                return new Set(data.split('\n').map(word => word.trim().toUpperCase()));
             }
-            return discs;
-        }
-
-        function countValidWords(discLetters, validWords) {
-            const combinations = new Set();
-
-            function generateWords(index, currentWord) {
-                if (index === discLetters.length) {
-                    const word = currentWord.join('');
-                    if (validWords.has(word)) {
-                        combinations.add(word);
+    
+            function getDiscLetters(word1, word2, word3) {
+                const discs = [];
+                for (let i = 0; i < 5; i++) {
+                    discs.push(new Set([word1[i], word2[i], word3[i]]));
+                }
+                return discs;
+            }
+    
+            function countValidWords(discLetters, validWords) {
+                const combinations = new Set();
+    
+                function generateWords(index, currentWord) {
+                    if (index === discLetters.length) {
+                        const word = currentWord.join('');
+                        if (validWords.has(word)) {
+                            combinations.add(word);
+                        }
+                        return;
                     }
-                    return;
+                    for (let letter of discLetters[index]) {
+                        currentWord.push(letter);
+                        generateWords(index + 1, currentWord);
+                        currentWord.pop();
+                    }
                 }
-                for (let letter of discLetters[index]) {
-                    currentWord.push(letter);
-                    generateWords(index + 1, currentWord);
-                    currentWord.pop();
-                }
+    
+                generateWords(0, []);
+                return combinations.size;
             }
-
-            generateWords(0, []);
-            return combinations.size;
-        }
-
-        async function findBestThirdWord(bella, loves, validWords) {
-            let maxCount = 0;
-            let bestWord = null;
-
-            validWords.forEach(candidate => {
-                if (candidate === bella || candidate === loves) return;
-
-                const discLetters = getDiscLetters(bella, loves, candidate);
-                const validCount = countValidWords(discLetters, validWords);
-
-                if (validCount > maxCount) {
-                    maxCount = validCount;
-                    bestWord = candidate;
-                }
-            });
-
-            return { bestWord, maxCount };
-        }
-
-        async function main() {
-            const bella = "BELLA";
-            const loves = "LOVES";
-            const validWords = await loadValidWords('valid_words.txt'); // Ensure this file is accessible
-
-            const { bestWord, maxCount } = await findBestThirdWord(bella, loves, validWords);
-            console.log(`The best third word is '${bestWord}' which allows ${maxCount} valid words.`);
-        }
-
-        main();
-    </script>
+    
+            async function findBestThirdWord(bella, loves, validWords) {
+                let maxCount = 0;
+                let bestWord = null;
+    
+                validWords.forEach(candidate => {
+                    if (candidate === bella || candidate === loves) return;
+    
+                    const discLetters = getDiscLetters(bella, loves, candidate);
+                    const validCount = countValidWords(discLetters, validWords);
+    
+                    if (validCount > maxCount) {
+                        maxCount = validCount;
+                        bestWord = candidate;
+                    }
+                });
+    
+                return { bestWord, maxCount };
+            }
+    
+            async function main() {
+                const bella = "BELLA";
+                const loves = "LOVES";
+                const validWords = await loadValidWords('valid_words.txt'); // Ensure this file is accessible
+    
+                const { bestWord, maxCount } = await findBestThirdWord(bella, loves, validWords);
+                console.log(`The best third word is '${bestWord}' which allows ${maxCount} valid words.`);
+            }
+    
+            main();
+        </script>
 </body>
 </html>
