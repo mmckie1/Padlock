@@ -68,74 +68,72 @@
             <p class="credits">Background image courtesy of Pixabay</p>
         </div>
         <script type="module">
-            async function loadValidWords(filePath) {
-                const response = await fetch(filePath);
-                const data = await response.text();
-                return new Set(data.split('\n').map(word => word.trim().toUpperCase()));
+           async function loadValidWords(filePath) {
+            const response = await fetch(filePath);
+            const data = await response.text();
+            return new Set(data.split('\n').map(word => word.trim().toUpperCase()));
+        }
+
+        function getDiscLetters(word1, word2, word3) {
+            const discs = [];
+            for (let i = 0; i < 5; i++) {
+                discs.push(new Set([word1[i], word2[i], word3[i]]));
             }
-    
-            function getDiscLetters(word1, word2, word3) {
-                const discs = [];
-                for (let i = 0; i < 5; i++) {
-                    discs.push(new Set([word1[i], word2[i], word3[i]]));
+            return discs;
+        }
+
+        function countValidWords(discLetters, validWords) {
+            const combinations = new Set();
+
+            function generateWords(index, currentWord) {
+                if (index === discLetters.length) {
+                    const word = currentWord.join('');
+                    if (validWords.has(word)) {
+                        combinations.add(word);
+                    }
+                    return;
                 }
-                return discs;
-            }
-    
-            function countValidWords(discLetters, validWords) {
-                const combinations = new Set();
-    
-                function generateWords(index, currentWord) {
-                    if (index === discLetters.length) {
-                        const word = currentWord.join('');
-                        if (validWords.has(word)) {
-                            combinations.add(word);
-                        }
-                        return;
-                    }
-                    for (let letter of discLetters[index]) {
-                        currentWord.push(letter);
-                        generateWords(index + 1, currentWord);
-                        currentWord.pop();
-                    }
+                for (let letter of discLetters[index]) {
+                    currentWord.push(letter);
+                    generateWords(index + 1, currentWord);
+                    currentWord.pop();
                 }
-    
-                generateWords(0, []);
-                return combinations.size;
             }
-    
-            async function findBestThirdWord(bella, loves, validWords) {
-                let maxCount = 0;
-                let bestWord = null;
-    
-                validWords.forEach(candidate => {
-                    if (candidate === bella || candidate === loves) return;
-    
-                    const discLetters = getDiscLetters(bella, loves, candidate);
-                    const validCount = countValidWords(discLetters, validWords);
-    
-                    if (validCount > maxCount) {
-                        maxCount = validCount;
-                        bestWord = candidate;
-                    }
-                });
-    
-                return { bestWord, maxCount };
-            }
-    
-            function main() {
-                const bella = "BELLA";
-                const loves = "LOVES";
-                const validWords = await loadValidWords('valid_words.txt'); // Ensure this file is accessible
-    
-                const { bestWord, maxCount } = await findBestThirdWord(bella, loves, validWords);
-                // Display the output
-                const outputDiv = document.getElementById('output');
-                outputDiv.innerHTML = `The best third word is <strong>${bestWord}</strong>, allowing the lock to spell <strong>${maxCount}</strong> valid words!`;
-                //console.log(`The best third word is '${bestWord}' which allows ${maxCount} valid words.`);
-            }
-    
-            main();
+
+            generateWords(0, []);
+            return combinations.size;
+        }
+
+        async function findBestThirdWord(bella, loves, validWords) {
+            let maxCount = 0;
+            let bestWord = null;
+
+            validWords.forEach(candidate => {
+                if (candidate === bella || candidate === loves) return;
+
+                const discLetters = getDiscLetters(bella, loves, candidate);
+                const validCount = countValidWords(discLetters, validWords);
+
+                if (validCount > maxCount) {
+                    maxCount = validCount;
+                    bestWord = candidate;
+                }
+            });
+
+            return { bestWord, maxCount };
+        }
+
+        async function main() {
+            const bella = "BELLA";
+            const loves = "LOVES";
+            const validWords = await loadValidWords('valid_words.txt'); // Ensure this file is accessible
+
+            const { bestWord, maxCount } = await findBestThirdWord(bella, loves, validWords);
+
+            // Display the output
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = `The best third word is <strong>${bestWord}</strong>, allowing the lock to spell <strong>${maxCount}</strong> valid words!`;
+        }
         </script>
 </body>
 </html>
